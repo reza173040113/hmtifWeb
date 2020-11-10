@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+<!-- j query -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<!-- firebase -->
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
+	<script defer >
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDzdN5Ies6hxarwNYKcAIe296Znmij922k",
+    authDomain: "flutter-c76ac.firebaseapp.com",
+    databaseURL: "https://flutter-c76ac.firebaseio.com",
+    projectId: "flutter-c76ac",
+    storageBucket: "flutter-c76ac.appspot.com",
+    messagingSenderId: "241175124681",
+    appId: "1:241175124681:web:cd82d5dba795e0765a0b18",
+    measurementId: "G-HZ55R99NMK"
+  };
+  // Initialize Firebase
+ firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+</script>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   
+</head>
+<body>
+	<!-- sign in -->
+	<div class="container" id="login-form">
+		<div class="well">
+			<h3>Sign In</h3>
+<form>
+  <div class="form-group">
+    <label for="inputEmail">Email address</label>
+    <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Email">
+  </div>
+  <div class="form-group">
+    <label for="inputPassword">Password</label>
+    <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
+  </div>
+  
+  <button id="sign-in-button" type="button" class="btn btn-primary btn-block">Sign In</button>
+   <button id="create-newuser-button" type="button" class="btn btn-warning btn-block">Create New User</button>
+    <button id="google-login-button" type="button" class="btn btn-primary btn-block">Sign in with Google</button>
+</form>
+</div>
+</div>
+
+<hr>
+<div class="container" id="logout-form">
+	<button id="logout-button" type="button" class="btn btn-primary btn-block">Logout</button>
+	
+</div>
+
+<div class="container" id="show-aspirasi">
+	<h1>Show Aspirasi</h1>
+		<button id="show-button" type="button" class="btn btn-primary btn-block">tampil</button>
+
+	
+</div>
+<!-- add hero form -->
+
+<div class="container" id="add-hero">
+		<div class="well">
+			<h3>Create Aspirasi</h3>
+<form>
+  <div class="form-group">
+    <label for="inputNamaAspirasi">Aspirasi dan Keluhan</label>
+    <input type="text" class="form-control" id="inputNamaAspirasi" name="inputEmail" placeholder="aspirasi">
+  </div>
+  <div class="form-group">
+    <label for="inputDeskripsi">Deskripsi</label>
+    <input type="text" class="form-control" id="inputDeskripsi" name="inputEmail" placeholder="deskripsi">
+  </div>
+
+  <button id="create-newhero-button" type="button" class="btn btn-primary btn-block">Create New Hero</button>
+
+</form>
+</div>
+</div>
+
+<!-- script -->
+
+<script type="text/javascript">
+	var currentUser = {};
+	// button listeners
+
+	$("#create-newuser-button").click(function(){
+		var email = $("#inputEmail").val();
+		var password = $("#inputPassword").val();
+		console.log("New user = " + email + " " + password);
+		CreateNewUser(email, password);
+		alert(errorMessage);
+
+	});
+	$("#sign-in-button").click(function(){
+		var email = $("#inputEmail").val();
+		var password = $("#inputPassword").val();
+		console.log("Existing user = " + email + " " + password);
+		SignIn(email, password);
+				alert(errorMessage);
+
+
+	});
+	$("#logout-button").click(function(){
+		firebase.auth().signOut();
+		console.log("logged out");
+
+
+	});
+	$("#create-newhero-button").click(function(){
+		var aspirasi = {
+			name: $("#inputNamaAspirasi").val(),
+			deskripsi: $("#inputDeskripsi").val(),
+			jumlahLike: 0,
+			isEnable: false,
+
+		}
+		addAspirasi(aspirasi);
+
+	});
+	$("#show-button").click(function(){
+			readAspirasi();
+
+
+	});
+	function readAspirasi(){
+	var aspirasiReference = firebase.firestore().collection("Aspirasi").get();
+	var aspirasiHtml = "<h3>Aspirasi</h3>";
+	aspirasiReference.then((querySnapshot) => {
+		querySnapshot.forEach((doc) => {
+			var aspirasi = doc.data();
+			aspirasiHtml += "<ul>";
+			aspirasiHtml += "<li>Name : <span>" + aspirasi.name + "<span></li>";
+			aspirasiHtml += "<li>Deskripsi : <span>" + aspirasi.deskripsi + "<span></li>";
+			aspirasiHtml += "</ul>";
+		});
+		$("#show-aspirasi").html(aspirasiHtml);
+	});	
+	}
+	
+	
+	function CreateNewUser(email,password){
+		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+		  console.log(errorMessage);
+		  // ...
+		});
+		firebase.auth().onAuthStateChanged(function(user) {
+		  if (user) {
+		    // User is signed in.
+		    var email = user.email;
+		    currentUser = user;
+		    console.log(currentUser.email + " has logged in");
+		    
+		    // ...
+		  } else {
+		    // User is signed out.
+		    // ...
+		  }
+		});
+	}
+	function SignIn(email,password){
+		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+			  console.log(errorMessage);
+		});
+	}
+
+	function addAspirasi(h){
+		firebase.firestore().collection("Aspirasi").add(h);
+		
+	}
+
+</script>
+<script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+
+ <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+
+
+
+
+</body>
+</html>
