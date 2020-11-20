@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+	<!-- firebase -->
+	<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
+	<script defer >
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  var firebaseConfig = {
+    apiKey: "AIzaSyDzdN5Ies6hxarwNYKcAIe296Znmij922k",
+    authDomain: "flutter-c76ac.firebaseapp.com",
+    databaseURL: "https://flutter-c76ac.firebaseio.com",
+    projectId: "flutter-c76ac",
+    storageBucket: "flutter-c76ac.appspot.com",
+    messagingSenderId: "241175124681",
+    appId: "1:241175124681:web:cd82d5dba795e0765a0b18",
+    measurementId: "G-HZ55R99NMK"
+  };
+  // Initialize Firebase
+ firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+
+</script>
+	<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+   
+<style>
+    
+    html {
+        background-color: #3F8F8F;
+    }
+
+    .konten{
+        height: 10em;
+        position: relative;
+        margin: 0;
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);  
+        width: 40%;
+    }
+
+
+
+
+</style>
+
+</head>
+
+<body>
+
+    <div class="container konten" id="login-form">
+		<div class="well">
+			<h3>Sign In</h3>
+<form>
+  <div class="form-group">
+    <label for="inputEmail">Email address</label>
+    <input type="email" class="form-control" id="inputEmail" name="inputEmail" placeholder="Email">
+  </div>
+  <div class="form-group">
+    <label for="inputPassword">Password</label>
+    <input type="password" class="form-control" id="inputPassword" name="inputPassword" placeholder="Password">
+  </div>
+  
+  <button id="sign-in-button" type="button" class="btn btn-primary btn-block">Sign In</button>
+   <button id="create-newuser-button" type="button" class="btn btn-warning btn-block">Create New User</button>
+    <!-- <button id="google-login-button" type="button" class="btn btn-primary btn-block">Sign in with Google</button> -->
+</form>
+</div>
+</div>
+    
+
+
+
+<script>
+
+    var currentUser = {};
+	// button listeners
+
+	$("#create-newuser-button").click(function(){
+		var email = $("#inputEmail").val();
+		var password = $("#inputPassword").val();
+		console.log("New user = " + email + " " + password);
+		CreateNewUser(email, password);
+		alert(errorMessage);
+
+	});
+	$("#sign-in-button").click(function(){
+		var email = $("#inputEmail").val();
+		var password = $("#inputPassword").val();
+		console.log("Existing user = " + email + " " + password);
+		SignIn(email, password);
+            window.location.href="home.html";
+            self.undelegateEvents();
+          delete self;
+
+			
+
+
+	});
+	$("#logout-button").click(function(){
+		firebase.auth().signOut();
+		console.log("logged out");
+
+
+	});
+
+	function CreateNewUser(email,password){
+		firebase.auth().createUserWithEmailAndPassword(email, password).catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+		  console.log(errorMessage);
+		  // ...
+		});
+		firebase.auth().onAuthStateChanged(function(user) {
+		  if (user) {
+		    // User is signed in.
+		    var email = user.email;
+		    currentUser = user;
+		    console.log(currentUser.email + " has logged in");
+		    
+		    // ...
+		  } else {
+		    // User is signed out.
+		    // ...
+		  }
+		});
+	}
+	function SignIn(email,password){
+		firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+		  // Handle Errors here.
+		  var errorCode = error.code;
+		  var errorMessage = error.message;
+			  console.log(errorMessage);
+		});
+    }
+    
+    $("#logout-button").click(function(){
+		firebase.auth().signOut();
+		console.log("logged out");
+
+
+	});
+
+</script>
+
+
+<script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-auth.js"></script>
+
+ <script src="https://www.gstatic.com/firebasejs/7.6.0/firebase-firestore.js"></script>
+</body>
+</html>
