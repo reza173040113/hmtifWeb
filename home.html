@@ -11,6 +11,7 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 	<script src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 	<link href="style.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="aspirasi/index.css">
 </head>
 <body>
 
@@ -27,14 +28,20 @@
 				<a class="nav-link" href="home.html">Home</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="aspirasi/index.html" id="show-button">Aspirasi</a>
+				<div class="dropdown">
+		          <button class="dropbtn">Aspirasi 
+		            <i class="fa fa-caret-down"></i>
+		          </button>
+		          <div class="dropdown-content">
+		            <a href="aspirasi/index.html">Aspirasi Mahasiswa</a>
+		            <a href="aspirasi/postinganAspirasi.html">Postingan Admin</a>
+		          </div>
+		        </div> 
 			</li>
 			<li class="nav-item">
 				<a class="nav-link" href="donasi/index.html">Donasi</a>
 			</li>
-			<li class="nav-item">
-				<a class="nav-link" href="aspirasi/postinganAspirasi.html">Postingan Aspirasi</a>
-			</li>
+		
 			<li class="nav-item">
 				<a class="nav-link" href="login.html" id="logout-button">Log Out</a>
 			</li>

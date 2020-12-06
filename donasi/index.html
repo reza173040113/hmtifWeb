@@ -74,6 +74,46 @@
             display: flex;
 
           }
+           .dropdown {
+          float: left;
+          margin-top: -5px;
+        }
+
+        .dropdown .dropbtn {
+          font-size: 16px;  
+          border: none;
+          outline: none;
+          color: black;
+          padding: 14px 16px;
+          background-color: inherit;
+          font-family: inherit;
+          margin: 0;
+        }
+        .dropdown-content {
+          display: none;
+          position: absolute;
+          background-color: #f9f9f9;
+          min-width: 160px;
+          box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+          z-index: 1;
+        }
+
+        .dropdown-content a {
+          float: none;
+          color: black;
+          padding: 12px 16px;
+          text-decoration: none;
+          display: block;
+          text-align: left;
+        }
+
+        .dropdown-content a:hover {
+          background-color: #ddd;
+        }
+
+        .dropdown:hover .dropdown-content {
+          display: block;
+        }
           
 </style>
 </head>
@@ -191,15 +231,20 @@
         <a class="nav-link" href="../home.html">Home</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="../aspirasi/index.html" id="show-button">Aspirasi</a>
+        <div class="dropdown">
+          <button class="dropbtn">Aspirasi 
+            <i class="fa fa-caret-down"></i>
+          </button>
+          <div class="dropdown-content">
+            <a href="../aspirasi/index.html">Aspirasi Mahasiswa</a>
+            <a href="../aspirasi/postinganAspirasi.html">Postingan Admin</a>
+          </div>
+        </div> 
       </li>
       <li class="nav-item">
         <a class="nav-link" href="index.html">Donasi</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" href="../aspirasi/postinganAspirasi.html">Postingan Aspirasi</a>
-      </li>
-      <li class="nav-item">
+            <li class="nav-item">
         <a class="nav-link" href="../login.html" id="logout-button">Log Out</a>
       </li>
     </ul>

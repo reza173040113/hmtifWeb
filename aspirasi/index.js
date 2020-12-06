@@ -27,7 +27,7 @@ $('#edit-newhero-button').click(function post(){
           name: $("#inputNamaAspirasiEdit").val(),
           deskripsi: $("#inputDeskripsiEdit").val(),
           jumlahLike: 0,
-          isEnable: true,
+          isEnable: "y",
         })
         .then(() => {alert("Aspirasi dan Keluhan berhasil di post!!!");})
         .catch(error  => {console.error(error)});
@@ -55,13 +55,12 @@ function deleteAsp(id){
 
 
 function readAsp() {
-  firebase.firestore().collection("Aspirasi").where("isEnable", "==", false).onSnapshot(function (snapshot) {
+  firebase.firestore().collection("Aspirasi").where("isEnable", "==", "n").onSnapshot(function (snapshot) {
    
     document.getElementById("cardSection").innerHTML = '';
     snapshot.forEach(function (aspirasiValue) {
       var aspirasi = aspirasiValue.data();
       document.getElementById("cardSection").innerHTML += `
-
       <div class="column col-md-6">
       <div class="card" style="width: 36rem;">
         <div class="card-body">
@@ -72,6 +71,7 @@ function readAsp() {
         </div>
       </div>
       </div>`
+      
 
     });
   
@@ -83,10 +83,12 @@ function readAsp() {
 }
 
 function readPostAsp() {
-  firebase.firestore().collection("Aspirasi").where("isEnable", "==", true).onSnapshot(function (snapshot) {
+  firebase.firestore().collection("Aspirasi").where("isEnable", "==", "y").onSnapshot(function (snapshot) {
     document.getElementById("cardSection").innerHTML = '';
     snapshot.forEach(function (aspirasiValue) {
       var aspirasi = aspirasiValue.data();
+      var x1 = aspirasiValue.data()['name'];
+      var x2 = aspirasiValue.data()['jumlahLike'];
       document.getElementById("cardSection").innerHTML += `
 
       <div class="column col-md-6">
@@ -94,18 +96,91 @@ function readPostAsp() {
         <div class="card-body">
           <h5 class="card-title">${aspirasi.name}</h5>
           <p class="card-text">${aspirasi.deskripsi}</p>
+          <p class="card-text">${aspirasi.jumlahLike}</p>
+
           <button type="button" id="edit-aspirasi-btn" data-heroId="${aspirasiValue.id}" class="btn btn-success edit-aspirasi-btn" data-toggle="modal" data-target="#editModal">Post</button>
 
         </div>
       </div>
-      </div>
-            
-`
+      </div>`
+        // document.getElementById("chart").innerHTML=`<canvas id="myChart"></canvas>`;
+        //       var ctx = document.getElementById('myChart').getContext('2d');
+        // var myChart = new Chart(ctx, {
+        //     type: 'bar',
+        //     data: {
+        //         labels: [x1,x1],
+        //         datasets: [{
+        //             label: '# of Votes',
+        //             data: [x2,x2],
+        //             backgroundColor: [
+        //                 'rgba(255, 99, 132, 0.2)',
+        //                 'rgba(54, 162, 235, 0.2)'
+        //             ],
+        //             borderColor: [
+        //                 'rgba(255, 99, 132, 1)',
+        //                 'rgba(54, 162, 235, 1)'
+        //             ],
+        //             borderWidth: 1
+        //         }]
+        //     },
+        //     options: {
+        //         scales: {
+        //             yAxes: [{
+        //                 ticks: {
+        //                     beginAtZero: true
+        //                 }
+        //             }]
+        //         }
+        //     }
+        // });
 
     });
   });
 }
+function readChart() {
+  firebase.firestore().collection("Aspirasi").orderBy("jumlahLike").onSnapshot(function (snapshot) {
+    document.getElementById("cardSection").innerHTML = '';
+    snapshot.forEach(function (aspirasiValue) {
+      var aspirasi = aspirasiValue.data();
+      var x1 = aspirasiValue.data()['name'];
+      var x2 = aspirasiValue.data()['jumlahLike'];
+      console.log(x1);
+      // document.getElementById("jumlahLike").innerHTML=`${snapshot.val()}`;
+      // x2 = snapshot.val();
+      document.getElementById("chart").innerHTML=`<canvas id="myChart"></canvas>`;
+      var ctx = document.getElementById('myChart').getContext('2d');
+      var myChart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+              labels: [x1],
+              datasets: [{
+                  label: '# of Votes',
+                  data: [x2],
+                  backgroundColor: [
+                      'rgba(255, 99, 132, 0.2)',
+                      'rgba(54, 162, 235, 0.2)'
+                  ],
+                  borderColor: [
+                      'rgba(255, 99, 132, 1)',
+                      'rgba(54, 162, 235, 1)'
+                  ],
+                  borderWidth: 1
+              }]
+          },
+          options: {
+              scales: {
+                  yAxes: [{
+                      ticks: {
+                          beginAtZero: true
+                      }
+                  }]
+              }
+          }
+      });
 
+    });
+  });
+}
 $(document).on('click', '.edit-aspirasi-btn', function tampilById(){
   var heroId = $(this).attr('data-heroId');
   $('#heroId').val(heroId);
